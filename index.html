@@ -50,7 +50,7 @@ input,select{font:inherit;color:inherit}
 .card{width:558px;max-width:calc(100% - 32px);margin:24px auto;height:calc(100vh - 89px - 48px);height:calc(100dvh - 89px - 48px);min-height:420px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 1px 3px #0000000a;display:flex;flex-direction:column;overflow:hidden}
 .card-h{position:relative;z-index:1;transition:box-shadow 150ms ease;padding:24px;border-bottom:1px solid var(--line);font-size:22px;font-weight:600;letter-spacing:-.22px;line-height:1.2}
 .card-b{flex:1;overflow:auto;padding:24px}
-.card-f{padding:16px 24px;display:flex;gap:12px;border-top:1px solid var(--line);position:relative;z-index:1;transition:box-shadow 150ms ease}
+.card-f{padding:24px;display:flex;gap:12px;border-top:1px solid var(--line);position:relative;z-index:1;transition:box-shadow 150ms ease}
 .card-f.sh{box-shadow:0 -2px 4px #24270205,0 -7px 7px #24270205,0 -15px 9px #24270203}
 .card-h.sh{box-shadow:0 2px 4px #24270205,0 7px 7px #24270205,0 15px 9px #24270203}
 .btn{height:48px;border-radius:12px;border:0;padding:0 20px;font-weight:500;font-size:16px;line-height:1.35;flex:1}
@@ -69,7 +69,7 @@ input,select{font:inherit;color:inherit}
 select.in{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6a63' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center}
 label.l,.l{display:block;font-size:14px;line-height:1.35;font-weight:500;color:var(--fg);margin:0 0 6px}
 .f{margin-bottom:24px}.row2{display:grid;grid-template-columns:238px 238px;column-gap:24px}
-.hint{font-size:12px;color:var(--fg3);margin-top:6px}.hint.ok{color:var(--ok)}.hint.err{color:var(--err)}
+.hint{line-height:1.35;font-size:12px;color:var(--fg3);margin-top:6px}.hint.ok{color:var(--ok)}.hint.err{color:var(--err)}
 .sec{font-size:14px;font-weight:500;line-height:1.35;color:var(--fg3);margin:24px 0 8px}
 .sec:first-child,.search+.sec{margin-top:0}
 .search{display:flex;gap:16px;margin-bottom:24px}
@@ -115,12 +115,17 @@ label.l,.l{display:block;font-size:14px;line-height:1.35;font-weight:500;color:v
 .ccy{display:flex;align-items:center;gap:6px;height:32px;padding:0 8px;border:1px solid var(--line-strong);border-radius:8px;background:#fff;font-weight:500;font-size:13px}
 .ccy:hover:not(:disabled){background:var(--surface2)}
 .ccy:disabled{opacity:.6;cursor:not-allowed}
-.kv{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:8px 0;min-height:40px}
-.t16{padding:24px}
+.kv{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:0;min-height:24px}
+.lst{display:flex;flex-direction:column;gap:16px}
+.stk{display:flex;flex-direction:column;gap:24px}.stk>*{flex:none}.stk .dash{margin:0 0 -1px}
+.fld .l{margin-bottom:6px}.fld .hint{margin-top:6px}
+.grp{display:flex;flex-direction:column;gap:22px}.grp .fld{margin:0}
+.t16{display:flex;flex-direction:column;gap:16px;padding:24px}.t16>*{flex:none}
+.t16 .hint{margin-top:-8px}
 .t16 .kv{font-size:16px;line-height:1.5}
-.t16 .kv.sm{font-size:14px}.t16 .kv.sm>span:last-child{font-weight:500;line-height:1.35}
-.kvh{font-size:16px;font-weight:500;line-height:1.35;color:var(--fg3);margin-bottom:8px}
-.t16 .dash{margin:16px 0 24px}
+.t16 .kv.sm{font-size:14px;min-height:21px}.t16 .kv.sm>span:last-child{font-weight:500;line-height:1.35}
+.kvh{font-size:16px;font-weight:500;line-height:1.35;color:var(--fg3)}
+.t16 .dash{margin:8px 0}
 .conf{padding:24px}
 .conf .rrs{margin-bottom:24px}.conf hr.dash{margin:0 0 24px}
 .t16 .kv.b>span:last-child{font-size:18px;line-height:1.2}
@@ -508,17 +513,17 @@ function startAmount(){
 function vAmount(){
   const r=S.rcp,idn=r.iban?maskIban(r.iban):(r.acct?'••••'+r.acct.slice(-4):'');
   return card('How much are you sending',`
-  <div class="l">You pay</div>
+  <div class="fld"><div class="l">You pay</div>
   <div class="amt" id="payBox"><input id="payIn" data-in="pay" inputmode="decimal" placeholder="0.00" value="${esc(S.payStr)}" autocomplete="off"><button class="ccy" data-act="payCcy">${CCY[S.payCcy]} ${S.payCcy} ${ic.chev}</button></div>
-  <div class="hint" id="payHint"></div>
-  <hr class="dash"><div id="rows"></div><hr class="dash">
-  <div class="l">Recipient gets</div>
+  <div class="hint" id="payHint"></div></div>
+  <hr class="dash"><div id="rows" class="lst"></div><hr class="dash">
+  <div class="fld"><div class="l">Recipient gets</div>
   <div class="amt" id="getBox"><input id="getIn" data-in="get" inputmode="decimal" placeholder="0.00" value="${esc(S.getStr)}" autocomplete="off"><button class="ccy" data-act="recvCcy" ${S.invoice?'disabled title="Currency is set by the invoice"':''}>${CCY[S.recvCcy]} ${S.recvCcy} ${S.invoice?'':ic.chev}</button></div>
-  <div class="hint" id="getHint">${esc(r.name)} · ${esc(idn)}</div>
-  <hr class="dash">
-  <div class="f"><label class="l" id="purLbl">Purpose of payment</label><button type="button" class="in sel ${S.purpose?'':'ph'}" id="purBtn" data-act="purposeMenu" aria-haspopup="listbox" aria-expanded="false"><span>${esc(S.purpose||'Select purpose')}</span>${ic.chev}</button></div>
-  <div class="f"><label class="l">Invoice number (optional)</label><input class="in" data-in="invNo" value="${esc(S.invNo)}" autocomplete="off"><div id="dup"></div></div>`,
-  `<button class="btn s" data-act="amountBack">Back</button><button class="btn p" id="amtNext" data-act="amountNext" disabled>Continue</button>`);
+  <div class="hint" id="getHint">${esc(r.name)} · ${esc(idn)}</div></div>
+  <div class="grp">
+  <div class="fld"><label class="l" id="purLbl">Purpose of payment</label><button type="button" class="in sel ${S.purpose?'':'ph'}" id="purBtn" data-act="purposeMenu" aria-haspopup="listbox" aria-expanded="false"><span>${esc(S.purpose||'Select purpose')}</span>${ic.chev}</button></div>
+  <div class="fld"><label class="l">Invoice number (optional)</label><input class="in" data-in="invNo" value="${esc(S.invNo)}" autocomplete="off"><div id="dup"></div></div></div>`,
+  `<button class="btn s" data-act="amountBack">Back</button><button class="btn p" id="amtNext" data-act="amountNext" disabled>Continue</button>`,{cls:'stk'});
 }
 /* counter animation for the calculated amount (200-300ms ease-out, skipped for reduced motion) */
 const shown={pay:null,get:null},amtRaf={};
