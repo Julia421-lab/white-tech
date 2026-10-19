@@ -107,7 +107,9 @@ label.l,.l{display:block;font-size:12px;font-weight:500;color:var(--fg2);margin:
 .ccy{display:flex;align-items:center;gap:6px;height:32px;padding:0 8px;border:1px solid var(--line-strong);border-radius:8px;background:#fff;font-weight:500;font-size:13px}
 .ccy:hover:not(:disabled){background:var(--surface2)}
 .ccy:disabled{opacity:.6;cursor:not-allowed}
-.kv{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:6px 0;min-height:32px}
+.kv{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:8px 0;min-height:40px}
+.t16 .kv{font-size:16px;line-height:1.5}
+.t16 .kv.b>span:last-child{font-size:18px;line-height:1.2}
 .kv>span:first-child{color:var(--fg3);flex:none}
 .kv>span:last-child{text-align:right;color:var(--fg);min-width:0;word-break:break-word}
 .kv.b>span:last-child{font-weight:600}
@@ -359,6 +361,7 @@ function render(){
   renderHeader();
   const v={list:vList,form:vForm,amount:vAmount,review:vReview,confirm:vConfirm,result:vResult}[S.step]();
   $('#app').innerHTML=v;
+  if(S.step==='review'||S.step==='confirm')$('#body').classList.add('t16');
   if(S.step==='review')startLockTimer();
   if(S.step==='confirm')startConfirm();
   if(S.step==='amount')refreshAmount();
