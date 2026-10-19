@@ -67,7 +67,7 @@ input,select{font:inherit;color:inherit}
 .in:focus{border-color:var(--control);box-shadow:0 0 0 3px #e4f22266}
 .in.err{border-color:var(--err)}
 select.in{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6a63' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center}
-label.l,.l{display:block;font-size:12px;font-weight:500;color:var(--fg2);margin:0 0 6px}
+label.l,.l{display:block;font-size:14px;line-height:1.35;font-weight:500;color:var(--fg);margin:0 0 6px}
 .f{margin-bottom:16px}.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .hint{font-size:12px;color:var(--fg3);margin-top:6px}.hint.ok{color:var(--ok)}.hint.err{color:var(--err)}
 .sec{font-size:12px;color:var(--fg3);margin:20px 0 8px}
@@ -100,15 +100,21 @@ label.l,.l{display:block;font-size:12px;font-weight:500;color:var(--fg2);margin:
 .star.on svg{fill:#c4d211;stroke:#c4d211}
 .link{background:none;border:0;padding:0;text-decoration:underline;font-weight:500;font-size:inherit;cursor:pointer}
 .empty{text-align:center;color:var(--fg3);padding:32px 0}
-.amt{display:flex;align-items:center;border:1px solid var(--line-strong);border-radius:16px;padding:0 12px 0 16px;height:64px;background:#fff}
+.amt{display:flex;align-items:center;border:1px solid var(--line-strong);border-radius:12px;padding:0 12px 0 16px;height:64px;background:#fff}
 .amt:focus-within{border-color:var(--control);box-shadow:0 0 0 3px #e4f22266}
 .amt.err{border-color:var(--err)}
-.amt input{font-variant-numeric:tabular-nums;flex:1;min-width:0;border:0;outline:0;font-size:26px;font-weight:500;letter-spacing:-.5px;background:none}
+.amt input{font-variant-numeric:tabular-nums;flex:1;min-width:0;border:0;outline:0;font-size:28px;line-height:1.2;font-weight:600;letter-spacing:-.28px;background:none}
 .ccy{display:flex;align-items:center;gap:6px;height:32px;padding:0 8px;border:1px solid var(--line-strong);border-radius:8px;background:#fff;font-weight:500;font-size:13px}
 .ccy:hover:not(:disabled){background:var(--surface2)}
 .ccy:disabled{opacity:.6;cursor:not-allowed}
 .kv{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:8px 0;min-height:40px}
+.t16{padding:24px}
 .t16 .kv{font-size:16px;line-height:1.5}
+.t16 .kv.sm{font-size:14px}.t16 .kv.sm>span:last-child{font-weight:500;line-height:1.35}
+.kvh{font-size:16px;font-weight:500;line-height:1.35;color:var(--fg3);margin-bottom:8px}
+.t16 .dash{margin:16px 0 24px}
+.conf{padding:24px}
+.conf .rrs{margin-bottom:24px}.conf hr.dash{margin:0 0 24px}
 .t16 .kv.b>span:last-child{font-size:18px;line-height:1.2}
 .kv>span:first-child{color:var(--fg3);flex:none}
 .kv>span:last-child{text-align:right;color:var(--fg);min-width:0;word-break:break-word}
@@ -130,7 +136,10 @@ label.l,.l{display:block;font-size:12px;font-weight:500;color:var(--fg2);margin:
 .note{background:var(--page);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--fg3);margin-top:10px}
 .banner{background:#fdf3d6;border:1px solid #f0d98a;border-radius:12px;padding:12px 14px;margin-bottom:16px}
 .banner b{display:block;margin-bottom:2px}
-.status{display:flex;justify-content:space-between;align-items:center;background:#f6f8c6;border-radius:12px;padding:12px;margin:14px 0}
+.status{display:flex;align-items:center;gap:10px;background:#f5f9c4;border-radius:10px;padding:14px 16px;margin:0 0 16px}
+.status .wt{font-weight:500;line-height:1.35}
+.status #appT{flex:1;text-align:right;font-size:12px;line-height:1.35;color:var(--fg3)}
+.status .spin{margin-right:0;flex:none;width:20px;height:20px}
 .spin{width:14px;height:14px;border:2px solid #d6dc6a;border-top-color:var(--fg);border-radius:50%;animation:sp 1s linear infinite;display:inline-block;vertical-align:-2px;margin-right:8px}
 @keyframes sp{to{transform:rotate(360deg)}}
 .big{display:grid;place-items:center;text-align:center;padding:8px 0 4px}
@@ -361,7 +370,8 @@ function render(){
   renderHeader();
   const v={list:vList,form:vForm,amount:vAmount,review:vReview,confirm:vConfirm,result:vResult}[S.step]();
   $('#app').innerHTML=v;
-  if(S.step==='review'||S.step==='confirm')$('#body').classList.add('t16');
+  if(S.step==='review')$('#body').classList.add('t16');
+  if(S.step==='confirm')$('#body').classList.add('conf');
   if(S.step==='review')startLockTimer();
   if(S.step==='confirm')startConfirm();
   if(S.step==='amount')refreshAmount();
@@ -482,11 +492,11 @@ function startAmount(){
 function vAmount(){
   const r=S.rcp,idn=r.iban?maskIban(r.iban):(r.acct?'••••'+r.acct.slice(-4):'');
   return card('How much are you sending',`
-  <div class="l" style="font-size:13px;color:var(--fg2)">You pay</div>
+  <div class="l">You pay</div>
   <div class="amt" id="payBox"><input id="payIn" data-in="pay" inputmode="decimal" placeholder="0.00" value="${esc(S.payStr)}" autocomplete="off"><button class="ccy" data-act="payCcy">${CCY[S.payCcy]} ${S.payCcy} ${ic.chev}</button></div>
   <div class="hint" id="payHint"></div>
   <hr class="dash"><div id="rows"></div><hr class="dash">
-  <div class="l" style="font-size:13px;color:var(--fg2)">Recipient gets</div>
+  <div class="l">Recipient gets</div>
   <div class="amt" id="getBox"><input id="getIn" data-in="get" inputmode="decimal" placeholder="0.00" value="${esc(S.getStr)}" autocomplete="off"><button class="ccy" data-act="recvCcy" ${S.invoice?'disabled title="Currency is set by the invoice"':''}>${CCY[S.recvCcy]} ${S.recvCcy} ${S.invoice?'':ic.chev}</button></div>
   <div class="hint" id="getHint">${esc(r.name)} · ${esc(idn)}</div>
   <hr class="dash">
@@ -559,16 +569,16 @@ function vReview(){
   const banner=exp?`<div class="banner"><b>The rate lock has expired</b>The rate changed from ${S.lock.rate.toFixed(4)} to ${S.lock.newRate.toFixed(4)}. ${S.lead==='get'?`You now pay ${fmt(c.pay)} ${S.payCcy} for ${fmt(c.get)} ${S.recvCcy}`:`${esc(r.name)} now gets ${fmt(c.get)} ${S.recvCcy}`}. Update the rate to continue.</div>`:'';
   const rateRow=conv()?kv(sch?'Exchange rate (on the transfer date)':exp?'Exchange rate (new)':`Exchange rate (locked for <span id="lockT">${lockText()}</span>)`,sch?'Set on the day':`1 ${S.payCcy} = ${c.r.toFixed(4)} ${S.recvCcy}`):'';
   return card('Review your transfer',`${banner}
-  <div class="l" style="font-size:13px">Amount</div>
+  <div class="kvh">Amount</div>
   ${kv('Recipient gets',`${approx?'≈ ':''}${fmt(c.get)} ${S.recvCcy}`,'b')}${kv('You pay',`${fmt(c.pay)} ${S.payCcy}`)}${kv('From',accounts[S.payCcy].name)}${kv('Fee',`${fmt(c.fee)} ${feeCcy()}`)}${rateRow}
   ${sc==='SWIFT'?'<div class="hint">Intermediary banks may add their own charges.</div>':''}
-  <hr class="dash"><div class="l" style="font-size:13px">Delivery</div>
+  <hr class="dash"><div class="kvh">Delivery</div>
   ${kv('Transfer method',SCH[sc])}${kv('Arrives',arrives())}${kv('Transfer date',sch?dFmt(new Date(S.date),true):'Now')}
   ${sch?`<div class="note">We'll send it on ${dFmt(new Date(S.date))}. Keep enough money on the account by then. The fee is final.</div>`:''}
-  <hr class="dash"><div class="l" style="font-size:13px">Recipient</div>${rc}${nmH}
-  <hr class="dash"><div class="l" style="font-size:13px">Payment details</div>
-  ${kv('Invoice number',S.invNo?esc(S.invNo):'—')}${kv('Purpose of payment',S.purpose?esc(S.purpose):'—')}
-  ${sc==='SWIFT'?kv('Bank charges',S.charges==='OUR'?'You pay (OUR)':'Shared (SHA)'):''}`,
+  <hr class="dash"><div class="kvh">Recipient</div>${rc}${nmH}
+  <hr class="dash"><div class="kvh">Payment details</div>
+  ${kv('Invoice number',S.invNo?esc(S.invNo):'—','sm')}${kv('Purpose of payment',S.purpose?esc(S.purpose):'—','sm')}
+  ${sc==='SWIFT'?kv('Bank charges',S.charges==='OUR'?'You pay (OUR)':'Shared (SHA)','sm'):''}`,
   `<button class="btn s" data-act="reviewBack">Back</button>${exp?'<button class="btn p" data-act="updateRate">Update rate</button>':`<button class="btn p" data-act="reviewNext">${mismatch?'Continue anyway':'Continue'}</button>`}`);
 }
 const lockLeft=()=>S.lock?Math.max(0,Math.ceil((S.lock.end-Date.now())/1000)):0;
@@ -608,10 +618,10 @@ function startConfirm(){
 }
 function vConfirm(){
   const c=calc(),m=S.conf.mode,approx=conv()&&(scheduled()||scheduleSw());
-  const sum=`<div class="kv b"><span>Recipient gets</span><span>${approx?'≈ ':''}${fmt(c.get)} ${S.recvCcy}</span></div><div class="kv"><span>You pay</span><span>${fmt(c.pay)} ${S.payCcy}</span></div><hr class="dash">`;
+  const sum=`<div class="rrs"><div class="rr b"><span>Recipient gets</span><span>${approx?'≈ ':''}${fmt(c.get)} ${S.recvCcy}</span></div><div class="rr"><span>You pay</span><span>${fmt(c.pay)} ${S.payCcy}</span></div></div><hr class="dash">`;
   if(m==='sending')return card('Confirm the payment',`<div class="big"><span class="spin" style="width:28px;height:28px;margin:0 0 16px"></span><h2>Sending your payment</h2><p>This takes a few seconds. Please do not close this page.</p></div>`,'',{cls:'ctr'});
-  if(m==='app')return card('Confirm the payment',`${sum}<p style="color:var(--fg3);margin:0">We sent a request to the mobile app on your phone. Check the amount and the recipient there and tap Approve.</p>
-    <div class="status"><span><span class="spin"></span>Waiting for approval</span><span id="appT" style="font-size:12px;color:var(--fg3)"></span></div><button class="link" data-act="useSms">Use SMS code instead</button>`,`<button class="btn s grow" data-act="confirmBack">Back</button>`);
+  if(m==='app')return card('Confirm the payment',`${sum}<p style="color:var(--fg3);margin:0 0 16px">We sent a request to the mobile app on your phone. Check the amount and the recipient there and tap Approve.</p>
+    <div class="status"><span class="spin"></span><span class="wt">Waiting for approval</span><span id="appT"></span></div><button class="link" data-act="useSms">Use SMS code instead</button>`,`<button class="btn s grow" data-act="confirmBack">Back</button>`);
   if(m==='expired')return card('Confirm the payment',`${sum}<div class="warn red"><b>You didn't approve in time</b><br>The request expired or was declined in the app. Your money was not debited. Request a new approval to continue.</div>`,`<button class="btn s" data-act="confirmBack">Back to review</button><button class="btn p" data-act="newApproval">Request new approval</button>`);
   if(m==='blocked')return card('Confirm the payment',`${sum}<div class="warn red">Too many incorrect codes. For your security, confirmation is blocked for 30 minutes. The payment was not sent.</div>`,`<button class="btn s grow" data-act="confirmBack">Back to review</button>`);
   return card('Confirm the payment',`${sum}<p style="color:var(--fg3);margin:0 0 16px">Enter the 6-digit code we sent to +44 7••• ••• 123. The SMS shows the amount and the recipient.</p>
@@ -681,7 +691,7 @@ function toast(msg,undo){
 function seedPay(kind){
   const sepa=kind!=='swift';
   S=freshState();S.rcp={...recipients.find(r=>r.name===(sepa?'Berlin Logistics GmbH':'Gulf Trading LLC'))};
-  S.payCcy=sepa?'GBP':'EUR';S.recvCcy=sepa?'EUR':'USD';S.payStr=sepa?'860':'1000';S.purpose='Consulting';S.charges='SHA';
+  S.payCcy=sepa?'GBP':'EUR';S.recvCcy=sepa?'EUR':'USD';S.payStr=sepa?'860.00':'1,000.00';S.purpose='Consulting';S.charges='SHA';
   if(kind==='scheduled')S.date=new Date(Date.now()+3*864e5).toISOString().slice(0,10);
 }
 function jumpTo(k){
