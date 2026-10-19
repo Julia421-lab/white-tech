@@ -87,6 +87,9 @@ label.l,.l{display:block;font-size:14px;line-height:1.35;font-weight:500;color:v
 .fav{gap:0}
 .av{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:600;font-size:12px;position:relative;flex:none}
 .av b{position:absolute;right:-4px;bottom:-4px;width:16px;height:16px;border-radius:4px;background:#fff;border:2px solid #fff;font-size:9px;display:grid;place-items:center;line-height:1;overflow:hidden;box-sizing:border-box}
+.av.logo{background:none;border-radius:0}
+.av.logo img{position:absolute;left:0;top:0;width:calc(100% + 4px);height:calc(100% + 4px);max-width:none;display:block}
+.fav .av.logo img{width:calc(100% + 4px);height:calc(100% + 4px)}
 .fav .av{width:56px;height:56px;border-radius:16px;font-size:18px}
 .fav .av b{width:24px;height:24px;border-radius:6px;font-size:13px}
 .rl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
@@ -216,11 +219,11 @@ const SCH={SEPA:'SEPA Instant',FPS:'FPS',FEDWIRE:'Fedwire',SWIFT:'SWIFT'};
 const accounts={EUR:{name:'Main EUR account',bal:12480},USD:{name:'USD account',bal:8210},GBP:{name:'GBP account',bal:3055.40}};
 const COLORS={'Nova Poshta':'#e3262d','Kyivstar':'#0a9bf5','SoftServe':'#111','FedEx Corporation':'#4d148c','Sysco Corporation':'#111','Berlin Logistics GmbH':'#0f766e','Brightside Ltd':'#d9631a','Gulf Trading LLC':'#2f7d4f'};
 let recipients=[
- {id:1,name:'Nova Poshta',country:'UA',type:'iban',iban:'UA213223130000026007233566001',bic:'EXBSUAUX',bank:'Ukreximbank',fav:true,edrpou:'31316718'},
- {id:2,name:'Kyivstar',country:'UA',type:'iban',iban:'UA903052992990004149123456789',bic:'PBANUA2X',bank:'PrivatBank',fav:true,edrpou:'21673832'},
- {id:3,name:'SoftServe',country:'UA',type:'iban',iban:'UA563220010000026007233566002',bic:'UKRSUAUX',bank:'Ukrsibbank',fav:false,edrpou:'24004431'},
- {id:4,name:'FedEx Corporation',country:'US',type:'us',aba:'021000021',acct:'483920114455',acctType:'Checking',bank:'JPMorgan Chase',address:'942 S Shady Grove Rd, Memphis, TN'},
- {id:5,name:'Sysco Corporation',country:'US',type:'us',aba:'026009593',acct:'229184417702',acctType:'Checking',bank:'Bank of America',address:'1390 Enclave Pkwy, Houston, TX'},
+ {id:1,name:'Nova Poshta',logo:'nova',country:'UA',type:'iban',iban:'UA213223130000026007233566001',bic:'EXBSUAUX',bank:'Ukreximbank',fav:true,edrpou:'31316718'},
+ {id:2,name:'Kyivstar',logo:'kyivstar',country:'UA',type:'iban',iban:'UA903052992990004149123456789',bic:'PBANUA2X',bank:'PrivatBank',fav:true,edrpou:'21673832'},
+ {id:3,name:'SoftServe',logo:'softserve',country:'UA',type:'iban',iban:'UA563220010000026007233566002',bic:'UKRSUAUX',bank:'Ukrsibbank',fav:false,edrpou:'24004431'},
+ {id:4,name:'FedEx Corporation',logo:'fedex',country:'US',type:'us',aba:'021000021',acct:'483920114455',acctType:'Checking',bank:'JPMorgan Chase',address:'942 S Shady Grove Rd, Memphis, TN'},
+ {id:5,name:'Sysco Corporation',logo:'sysco',country:'US',type:'us',aba:'026009593',acct:'229184417702',acctType:'Checking',bank:'Bank of America',address:'1390 Enclave Pkwy, Houston, TX'},
  {id:6,name:'Berlin Logistics GmbH',country:'DE',type:'iban',iban:'DE89370400440532013000',bic:'COBADEFF',bank:'Commerzbank (SEPA Instant)',sepa:true},
  {id:7,name:'Brightside Ltd',country:'UK',type:'uk',sort:'204545',acct:'12345678',bank:'Barclays'},
  {id:8,name:'Gulf Trading LLC',country:'AE',type:'iban',iban:'AE070331234567890123456',bic:'GNBKAEAD',bank:'Emirates NBD',address:'Sheikh Zayed Rd, Dubai'},
@@ -259,7 +262,7 @@ const ic={
  chev:'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
  doc:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>',
 };
-const av=r=>`<span class="av" style="background:${COLORS[r.name]||'#5b2a9e'}">${esc(initials(r.name))}<b>${CTRY[r.country].f}</b></span>`;
+const av=r=>r.logo?`<span class="av logo"><img src="img/${r.logo}.png" alt=""></span>`:`<span class="av" style="background:${COLORS[r.name]||'#5b2a9e'}">${esc(initials(r.name))}<b>${CTRY[r.country].f}</b></span>`;
 
 /* ---------- state ---------- */
 let S;
