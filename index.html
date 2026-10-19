@@ -487,8 +487,8 @@ function vAmount(){
   <div class="amt" id="getBox"><input id="getIn" data-in="get" inputmode="decimal" placeholder="0.00" value="${esc(S.getStr)}" autocomplete="off"><button class="ccy" data-act="recvCcy" ${S.invoice?'disabled title="Currency is set by the invoice"':''}>${CCY[S.recvCcy]} ${S.recvCcy} ${S.invoice?'':ic.chev}</button></div>
   <div class="hint" id="getHint">${esc(r.name)} · ${esc(idn)}</div>
   <hr class="dash">
-  <div class="f"><label class="l">Invoice number (optional)</label><input class="in" data-in="invNo" value="${esc(S.invNo)}" autocomplete="off"><div id="dup"></div></div>
-  <div class="f"><label class="l" id="purLbl">Purpose of payment</label><select class="in" data-in="purpose"><option value="">Select purpose</option>${PURPOSES.map(p=>`<option ${S.purpose===p?'selected':''}>${p}</option>`).join('')}</select></div>`,
+  <div class="f"><label class="l" id="purLbl">Purpose of payment</label><select class="in" data-in="purpose"><option value="">Select purpose</option>${PURPOSES.map(p=>`<option ${S.purpose===p?'selected':''}>${p}</option>`).join('')}</select></div>
+  <div class="f"><label class="l">Invoice number (optional)</label><input class="in" data-in="invNo" value="${esc(S.invNo)}" autocomplete="off"><div id="dup"></div></div>`,
   `<button class="btn s" data-act="amountBack">Back</button><button class="btn p" id="amtNext" data-act="amountNext" disabled>Continue</button>`);
 }
 /* counter animation for the calculated amount (200-300ms ease-out, skipped for reduced motion) */
