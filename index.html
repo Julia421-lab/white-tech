@@ -53,11 +53,11 @@ input,select{font:inherit;color:inherit}
 .card-f{padding:24px;display:flex;gap:12px;border-top:1px solid var(--line);position:relative;z-index:1;transition:box-shadow 150ms ease}
 .card-f.sh{box-shadow:0 -2px 4px #24270205,0 -7px 7px #24270205,0 -15px 9px #24270203}
 .card-h.sh{box-shadow:0 2px 4px #24270205,0 7px 7px #24270205,0 15px 9px #24270203}
-.btn{height:48px;border-radius:12px;border:0;padding:0 20px;font-weight:500;font-size:16px;line-height:1.35;flex:1}
+.btn{height:48px;border-radius:12px;border:0;padding:0 20px;font-weight:500;font-size:16px;line-height:1.35;flex:1;white-space:nowrap}
 .btn.p{background:linear-gradient(#d6e41a,#f6ff7c)}
 .btn.p:hover{background:linear-gradient(#e4f222,#f6ff7c)}
 .btn.p:active{background:linear-gradient(#c4d211,#d6e262)}
-.btn.s{background:var(--surface2);flex:0 0 auto;width:120px;min-width:120px}.btn.s:hover,.btn.s:active{background:var(--line)}
+.btn.s{background:var(--surface2);flex:0 0 auto;width:auto;min-width:120px}.btn.s:hover,.btn.s:active{background:var(--line)}
 .btn.s.grow{flex:1}
 .btn:disabled,.btn.p:disabled:hover{background:var(--surface2);color:var(--dis);cursor:not-allowed}
 .btn.danger{background:linear-gradient(#a82121,#c42b2b);color:#fff}
@@ -707,8 +707,14 @@ function openMenu(anchor,html,bind,opts={}){
   const below=b.bottom+6,fitsBelow=below+m.offsetHeight<=innerHeight-8;
   m.style.top=(fitsBelow?below:Math.max(8,b.top-6-m.offsetHeight))+'px';
   m.style.left=(opts.match?b.left:Math.max(8,Math.min(b.right-m.offsetWidth,innerWidth-m.offsetWidth-8)))+'px';
-  bind(m);setTimeout(()=>document.addEventListener('click',function h(e){if(!m.contains(e.target)){closeMenu();document.removeEventListener('click',h)}}),0);
+  m._anchor=anchor;bind(m);
 }
+/* outside click closes (capture phase, so clicking another trigger closes this one and still opens the next; clicking the same trigger toggles) */
+document.addEventListener('click',e=>{
+  const m=document.querySelector('.menu');if(!m||m.contains(e.target))return;
+  const same=m._anchor&&m._anchor.contains(e.target);closeMenu();
+  if(same){e.stopPropagation();e.preventDefault()}
+},true);
 function modal(html){$('#layer').innerHTML=`<div class="ovl" data-act="ovl"><div class="modal">${html}</div></div>`}
 const closeModal=()=>{$('#layer').innerHTML=''};
 let toastT;
@@ -862,8 +868,8 @@ document.addEventListener('blur',e=>{
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMenu();closeModal()}
   const m=document.querySelector('.menu');if(m&&(e.key==='ArrowDown'||e.key==='ArrowUp')){e.preventDefault();const items=[...m.querySelectorAll('button')],i=items.indexOf(document.activeElement);items[(i+(e.key==='ArrowDown'?1:-1)+items.length)%items.length].focus()}});
 document.addEventListener('change',e=>{if(e.target.dataset.in==='invoiceFile'&&e.target.files.length)A.useSample()});
-document.addEventListener('scroll',e=>{if(e.target&&e.target.id==='body')updateEdges()},true);
-addEventListener('resize',updateEdges);
+document.addEventListener('scroll',e=>{if(e.target&&e.target.id==='body'){updateEdges();closeMenu()}},true);
+addEventListener('resize',()=>{updateEdges();closeMenu()});
 render();
 </script>
 </body>
