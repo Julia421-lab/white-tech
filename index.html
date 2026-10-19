@@ -175,7 +175,12 @@ label.l,.l{display:block;font-size:14px;line-height:1.35;font-weight:500;color:v
 .toast{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);background:var(--fg);color:#fff;border-radius:12px;padding:12px 16px;z-index:60;display:flex;gap:16px;align-items:center;font-size:13px}
 .toast button{background:none;border:0;color:var(--accent);font-weight:500;padding:0}
 .demo{position:fixed;left:16px;bottom:16px;z-index:30;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12px;box-shadow:0 2px 8px #0000000f;max-width:230px}
-.demo b{display:block;margin-bottom:4px;font-weight:600}
+.demo b{display:block;font-weight:600}
+.demo-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px}
+.demo .demo-tg{margin:0;display:flex;align-items:center;gap:8px;border:0;background:none;border-radius:8px;padding:4px;font-size:12px;font-weight:600}
+.demo .demo-tg:hover{background:var(--surface2)}
+.demo.min{padding:4px 8px}
+.demo.min .demo-tg{padding:4px 2px}
 .demo label{display:flex;gap:6px;align-items:center;margin:3px 0}
 .demo select.jump{height:30px;font-size:12px;margin:4px 0 2px;padding:0 24px 0 8px;border-radius:8px}
 .demo button{margin-top:6px;margin-right:4px;border:1px solid var(--line-strong);background:#fff;border-radius:8px;padding:3px 8px;font-size:12px}
@@ -286,7 +291,7 @@ function freshState(){return{step:'list',q:'',rcp:null,form:null,invoice:null,
   payCcy:'EUR',recvCcy:'EUR',payStr:'',getStr:'',lead:'pay',charges:'SHA',date:null,invNo:'',purpose:'',
   lock:null,nameCheck:null,conf:null,result:null,pay:null}}
 S=freshState();
-const demo={auto:true,reject:false};
+const demo={auto:true,reject:false,open:(()=>{try{return localStorage.getItem('wt-demo-open')!=='0'}catch(e){return true}})()};
 let timers=[];
 const clearTimers=()=>{timers.forEach(t=>clearInterval(t)&&clearTimeout(t));timers=[]};
 
@@ -407,7 +412,9 @@ function updateEdges(){
   $('.card-h')?.classList.toggle('sh',top);$('.card-f')?.classList.toggle('sh',bottom);
 }
 function renderDemo(){
-  $('#demo').innerHTML=`<b>Prototype controls</b>
+  const box=$('#demo');box.classList.toggle('min',!demo.open);
+  if(!demo.open){box.innerHTML=`<button class="demo-tg" data-act="demoToggle" aria-expanded="false" aria-label="Expand prototype controls"><span>Prototype controls</span>${ic.chev.replace('<svg','<svg style="rotate:180deg"')}</button>`;return}
+  box.innerHTML=`<div class="demo-h"><b>Prototype controls</b><button class="demo-tg" data-act="demoToggle" aria-expanded="true" aria-label="Collapse prototype controls">${ic.chev}</button></div>
   <label><input type="checkbox" data-in="demoAuto" ${demo.auto?'checked':''}> Auto-approve in app (5s)</label>
   <label><input type="checkbox" data-in="demoReject" ${demo.reject?'checked':''}> Bank rejects next payment</label>
   <select class="in jump" data-in="jump" aria-label="Jump to screen"><option value="">Jump to screen…</option>
@@ -520,6 +527,7 @@ function vAmount(){
   <div class="fld"><div class="l">Recipient gets</div>
   <div class="amt" id="getBox"><input id="getIn" data-in="get" inputmode="decimal" placeholder="0.00" value="${esc(S.getStr)}" autocomplete="off"><button class="ccy" data-act="recvCcy" ${S.invoice?'disabled title="Currency is set by the invoice"':''}>${CCY[S.recvCcy]} ${S.recvCcy} ${S.invoice?'':ic.chev}</button></div>
   <div class="hint" id="getHint">${esc(r.name)} · ${esc(idn)}</div></div>
+  <hr class="dash">
   <div class="grp">
   <div class="fld"><label class="l" id="purLbl">Purpose of payment</label><button type="button" class="in sel ${S.purpose?'':'ph'}" id="purBtn" data-act="purposeMenu" aria-haspopup="listbox" aria-expanded="false"><span>${esc(S.purpose||'Select purpose')}</span>${ic.chev}</button></div>
   <div class="fld"><label class="l">Invoice number (optional)</label><input class="in" data-in="invNo" value="${esc(S.invNo)}" autocomplete="off"><div id="dup"></div></div></div>`,
@@ -743,6 +751,7 @@ function jumpTo(k){
 function pickRcp(r){S.rcp={...r};S.invoice=null;S.nameCheck=null;startAmount()}
 const A={
  restart:restartPrototype,
+ demoToggle(){demo.open=!demo.open;try{localStorage.setItem('wt-demo-open',demo.open?'1':'0')}catch(e){}renderDemo()},
  reset(){clearTimers();closeModal();S=freshState();render()},
  pick(t,e){if(e.target.closest('.acts'))return;pickRcp(recipients.find(r=>r.id==t.dataset.id))},
  clearQ(){S.q='';render();$('#q').focus()},
